@@ -15,6 +15,7 @@ public class Curso extends Conteudo { //herança
     }
 
     public void setCargaHoraria(int cargaHoraria) {
+
         this.cargaHoraria = cargaHoraria;
     }
 

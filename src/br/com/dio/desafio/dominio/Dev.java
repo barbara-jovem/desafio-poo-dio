@@ -1,37 +1,48 @@
 package br.com.dio.desafio.dominio;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Dev {
     private String nome;
-    private Set<Conteudo> conteudosIncritos = new LinkedHashSet<>();
+    private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
     //A medida que for concluindo os cursos, serão listados em ordem
     //polimorfismo = instanciando atraves da classe mãe
 
     //listar métodos abaixo:
     public void inscreverBootcamp(Bootcamp bootcamp){
-        this.conteudosIncritos.addAll(bootcamp.getConteudos());
-        bootcamp.getDevsInscritos().add(this); //adiciona o dev no bootcamp
+        this.conteudosInscritos.addAll(bootcamp.getConteudos());
+        bootcamp.getDevsInscritos().add(this);
     }
-    public void progredir(){
-        Optional<Conteudo> conteudo = this.conteudosIncritos.stream().findFirst();
+
+    public void progredir() {
+        Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
         if(conteudo.isPresent()) {
-            this.conteudosConcluidos.add(conteudo.get()); //conteudo concluido sai da lista de conteudo a fazer
-            this.conteudosIncritos.remove(conteudo.get());
+            this.conteudosConcluidos.add(conteudo.get());
+            this.conteudosInscritos.remove(conteudo.get());
         } else {
-            System.err.println("Você não está matriculado em nenhum Conteudo.");
+            System.err.println("Você não está matriculado em nenhum conteúdo!");
         }
     }
+
     public double calcularTotalXp() {
-        this.conteudosConcluidos
+        Iterator<Conteudo> iterator = this.conteudosConcluidos.iterator();
+        double soma = 0;
+        while(iterator.hasNext()){
+            double next = iterator.next().calcularXp();
+            soma += next;
+        }
+        return soma;
+
+        /*return this.conteudosConcluidos
                 .stream()
-                .mapToDouble((Conteudo::calcularXp)) //reference method no lugar do lambda
-                .sum();
-    //pega o XP de cada conteúdo e soma
+                .mapToDouble(Conteudo::calcularXp)
+                .sum();*/
+        //reference method no lugar do lambda
+        //pega o XP de cada conteúdo e soma
     }
+
+
     public String getNome() {
         return nome;
     }
@@ -40,12 +51,12 @@ public class Dev {
         this.nome = nome;
     }
 
-    public Set<Conteudo> getConteudosIncritos() {
-        return conteudosIncritos;
+    public Set<Conteudo> getConteudosInscritos() {
+        return conteudosInscritos;
     }
 
-    public void setConteudosIncritos(Set<Conteudo> conteudosIncritos) {
-        this.conteudosIncritos = conteudosIncritos;
+    public void setConteudosInscritos(Set<Conteudo> conteudosInscritos) {
+        this.conteudosInscritos = conteudosInscritos;
     }
 
     public Set<Conteudo> getConteudosConcluidos() {
@@ -56,17 +67,16 @@ public class Dev {
         this.conteudosConcluidos = conteudosConcluidos;
     }
 
-    //criar equals e hashcode pois está usando o "Hash":
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Dev dev = (Dev) o;
-        return Objects.equals(nome, dev.nome) && Objects.equals(conteudosIncritos, dev.conteudosIncritos) && Objects.equals(conteudosConcluidos, dev.conteudosConcluidos);
+        return Objects.equals(nome, dev.nome) && Objects.equals(conteudosInscritos, dev.conteudosInscritos) && Objects.equals(conteudosConcluidos, dev.conteudosConcluidos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, conteudosIncritos, conteudosConcluidos);
+        return Objects.hash(nome, conteudosInscritos, conteudosConcluidos);
     }
 }

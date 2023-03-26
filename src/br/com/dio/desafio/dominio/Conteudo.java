@@ -14,8 +14,7 @@ public abstract class Conteudo {
 
     public abstract double calcularXp(); //método para calcular XP da Dio
     //abstract pq não consegue instanciar Conteudo
-
-
+    
     public String getTitulo() {
         return titulo;
     }
